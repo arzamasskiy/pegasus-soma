@@ -533,7 +533,7 @@ if (Mesh.nstep % dtncheck == 0){
     step_time = (double)(tv_curr.tv_sec - tv_prev.tv_sec) +
     1.0e-6*(double)(tv_curr.tv_usec - tv_prev.tv_usec);
 
-    peg_pout(0,"\ncycle=%i time=%e next dt=%e step time=%e s",
+    peg_pout(0,"cycle=%i time=%e next dt=%e step time=%e s\n",
 	     Mesh.nstep,Mesh.time,Mesh.dt, step_time);
 
     tv_prev = tv_curr;
