@@ -1,0 +1,60 @@
+# This is the default Makefile for VtkReader
+# @WARNING1@
+# @WARNING2@
+
+###########################################
+## User can activate options, replacing  ##
+## no by yes. Options not available can't##
+## be activated                          ##
+###########################################
+
+OPENMP= @OPENMP_ACTIVE@
+MPI= @MPI_ACTIVE@
+FFTW3_MPI= @FFTW_MPI_ACTIVE@
+DEBUG= @DEBUG_ACTIVE@
+
+###########################################
+## Configuration found by ./configure    ##
+###########################################
+
+CLUSTER="@host@"
+CC=@CC@
+CFLAGS=@CFLAGS@
+OPENMP_FLAG = @OPENMP_CFLAGS@
+LIBS= @LIBS@
+LDFLAGS=@LDFLAGS@
+
+ifeq ($(DEBUG),yes)
+	CFLAGS=@CFLAGS_DEBUG@ -DDEBUG
+	LDFLAGS=@LDFLAGS_DEBUG@
+endif
+
+
+## General compilation variables
+###############################################################
+
+ifeq ($(OPENMP),yes)
+	CFLAGS+=$(OPENMP_FLAG)
+	LDFLAGS+=$(OPENMP_FLAG)
+endif
+
+LDFLAGS+=$(LIBS)
+
+export CC
+export CFLAGS
+export LDFLAGS
+
+###############################################################
+## Compilation rules
+###############################################################
+
+all:
+	@(cd src && $(MAKE))
+	cp src/vtkreader .
+	@echo "***********************************************************"
+	@echo "Make has compiled for: " $(CLUSTER)
+	@echo "***********************************************************"
+
+clean:
+	@(cd src && $(MAKE) $@)
+	rm vtkreader

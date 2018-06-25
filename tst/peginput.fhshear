@@ -1,0 +1,85 @@
+<comment>
+
+problem = fhshear
+author  = Matthew Kunz
+journal =
+config  = --with-problem=fhshear
+
+<job>
+
+problem_id      = fhshear   # problem ID: basename of output filenames
+maxout          = 2         # Output blocks number from 1 -> maxout
+num_domains     = 1
+
+<output1>
+out_fmt = hst               # History data dump
+dt      = 1.0               # time increment between outputs
+
+<output2>
+out_fmt = vtk
+dt      = 1.0
+
+<output3>
+out_fmt = lis               # particle list data dump (ONLY for particles)
+dt      = 1.0              # time step between output
+id      = par
+par_prop = limit
+
+<output4>
+out_fmt = lis
+dt      = 1.0
+id      = track
+par_prop = type
+
+<time>
+
+cour_no         = 0.4       # The Courant, Friedrichs, & Lewy (CFL) Number
+nlim            = 10000000     # cycle limit
+tlim            = 1000.
+timestep        = 0.007     # timestep for hybrid-PIC simulations
+
+<domain1>
+level           = 0
+Nx1             = 100    # Number of zones in X-direction
+x1min           = -50.0       # minimum value of X
+x1max           = 50.0    # maximum value of X
+bc_ix1          = 4         # inner-I (X) boundary flag
+bc_ox1          = 4         # outer-I (X) boundary flag
+
+Nx2             = 100      # Number of zones in X2-direction
+x2min           = -50.0       # minimum value of X2
+x2max           = 50.0     # maximum value of X2
+bc_ix2          = 4         # inner-J (Y) boundary flag
+bc_ox2          = 4         # outer-J (Y) boundary flag
+
+Nx3             = 1         # Number of zones in X3-direction
+x3min           = 0.0       # minimum value of X3
+x3max           = 1.0    # maximum value of X3
+bc_ix3          = 4         # inner-K (Z) boundary flag
+bc_ox3          = 4         # outer-K (Z) boundary flag
+
+NGrid_x1 = 2
+NGrid_x2 = 1
+NGrid_x3 = 1
+
+<particle>
+
+partypes        = 1 #2         # number of types of particles
+#parnumgrid      = 2         # number of particle for each type per grid
+parnumcell      = 64        # number of particles for each type per cell
+
+interp          = 2         # interpolation scheme (1: CIC; 2: TSC; 3: QP)
+nshuf           = 10000        # number of time steps to shuffle the particles
+qomc            = 1.0      # charge-to-mass ratio (divided by c)
+nfpass          = 4
+
+<problem>
+distfunc        = 2            # 1 = static; 2 = Maxwellian; 3 = Bi-Maxwellian
+shear           = 0.0001
+omega           = 0.0
+amp             = 0.0
+beta            = 200.0         # = 2 (rho_i / d_i)^2
+ZTeTi           = 0.0
+gamma           = 1.666666666666666667
+mytype          = 0 #1		# type of particle for tracking
+nlis            = 0 #1024          # number of particles to dump per processor

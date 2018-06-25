@@ -1,0 +1,91 @@
+#    @WARNING1@
+#    @WARNING2@
+#===============================================================================
+# FILE: Makefile.in
+#
+# PURPOSE: Template for src/Makefile.  When 'configure' is run, a new Makefile
+# will be created (overwriting the last) from this template.
+#
+#-------------------  object files  --------------------------------------------
+CORE_OBJ = peg_array.o \
+           peg_files.o \
+	   peg_log.o \
+           peg_signal.o \
+           baton.o \
+           bvals_mhd.o \
+           cc_pos.o \
+           dump_history.o \
+           dump_vtk.o \
+	   peg_dt.o \
+           init_grid.o \
+           init_mesh.o \
+           main.o \
+	   new_dt.o \
+           output.o \
+           output_vtk.o \
+           par.o \
+           problem.o \
+           restart.o \
+           show_config.o \
+           utils.o
+
+
+INTEGRATORS_OBJ = integrators/integrate.o \
+		  integrators/integrate_1d_hybrid.o \
+		  integrators/integrate_2d_hybrid.o \
+		  integrators/integrate_3d_hybrid.o
+
+PARTICLES_OBJ = particles/dist_func.o \
+		particles/exchange.o \
+	        particles/init_particle.o \
+	        particles/integrators_particle.o \
+	        particles/output_particle.o\
+	        particles/bvals_particle.o \
+	        particles/utils_particle.o
+
+ALL_OBJ = ${CORE_OBJ} ${INTEGRATORS_OBJ} ${PARTICLES_OBJ}
+
+#-------------------  macro definitions  ---------------------------------------
+
+BIN = ${EXEDIR}pegasus
+EXEDIR = ../bin/
+SRC = $(ALL_OBJ:.o=.c)
+
+include ../Makeoptions
+
+#--------------------  implicit rules  -----------------------------------------
+
+.c.o:
+	${CC} ${CFLAGS} -c $<
+
+#---------------------  targets  -----------------------------------------------
+
+all:	compile
+
+.PHONY: compile
+compile: ${BIN}
+
+${BIN}: ${ALL_OBJ}
+	${LDR} $(OPT) -o ${EXEDIR}pegasus ${ALL_OBJ} ${LIB}
+
+help:
+	@echo This is the Pegasus Makefile
+	@echo Type 'make compile' to generate Pegasus executable
+	@echo Type 'make clean'   to remove '*.o' files
+	@echo OBJ=$(OBJ)
+
+.PHONY: clean
+clean:
+	rm -f *.o Makedepend $(BIN)
+
+depend: Makedepend
+
+Makedepend:
+	${CC} ${MAKEDPND} ${CFLAGS} ${SRC} > Makedepend
+
+# a few functionality tests of some modules of the code
+par:	par.c
+	$(CC) $(CFLAGS) -DTESTBED -o par par.c
+
+# this forces a rebuild of all objects, if code re-configure'd
+include Makedepend

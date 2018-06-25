@@ -1,0 +1,40 @@
+List of problem generator files in src/prob:
+
+================================================================================
+                              1-D problems
+================================================================================
+
+cpaw1d.c:
+=========
+Circularly Polarized Alfven Wave test.  This initializes only truly 1D
+tests, that is wave must be in x1-direction only.
+
+landau.c:
+=========
+Landau damping 
+
+firehose1d.c:
+=============
+Undriven parallel (angle==0) and oblique (angle!=0) firehose instabilities. 
+
+================================================================================
+                              2-D problems
+================================================================================
+
+cpaw2d.c:
+=========
+Circularly Polarized Alfven Wave test.  Initializes wavevector at any
+arbitrary angle to grid in 2D.
+
+firehose.c:
+===========
+Undriven firehose instability in 2D.
+
+mirror.c:
+=========
+Undriven mirror instability in 2D.
+
+mri2d.c:
+========
+Net-flux and zero-net-flux axisymmetric magnetorotational instability.
+

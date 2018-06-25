@@ -1,0 +1,33 @@
+Edot ~ 0.1 rho L^2 cs^3 ~ L^2 rho (dv)^3
+
+edot ~ Lprp^2 rho (dv)^3 ~ 0.05
+
+want dv/va ~ Lprp/Lprl ~ 1/8
+
+dE     1/128     0.0078
+--- ~ ------- ~  ------
+dt       dt        dt
+
+
+urms = sqrt[ int{ E(kprp) dkprp } ] ~ va/8
+
+
+dv/va ~ 0.35 cs/va
+
+edot = 0.1 cs^3/L = 1/2 v^2 / tcorr ~ 0.0408333 cs^3 / L 
+
+beta = 1 --> va = sqrt(2) cs
+
+edot = 0.1 = 3.92/time --> time = 39.2
+
+add_drive adds force to electric field
+compute_drive:
+	generate_drive
+		pspect generates fv1,fv2,fv3, which are Fourier amplitudes and phases
+		project forces k.fv = 0 in Fourier space
+		transform iFFT's to get real space fv1,fv2,fv3
+	perturb
+		fv1->dv1, fv2->dv2, fv3->dv3, with no net momentum injection and proper scaling
+	O-U process averages force and dv, stores in force
+	bvals_force
+

@@ -1,0 +1,53 @@
+#    @WARNING1@
+#    @WARNING2@
+#===============================================================================
+# FILE: Makeoptions.in
+#
+# PURPOSE: Template for src/Makeoptions.  When 'configure' is run, a new
+# Makeoptions will be created (overwriting the last) from this template.
+#
+# TO BY-PASS CONFIGURE: copy this file into Makeoptions, and edit by hand to
+#   set the appropriate object files, compiler options, and library paths.
+#
+#-------------------  macro definitions  ---------------------------------------
+
+MACHINE = macosx
+
+#-------------------  default definitions  -------------------------------------
+
+CC  = @CC@
+LDR = @CC@
+OPT = @COMPILER_OPTS@
+MAKEDPND = -MM # -MM for speed when supported, use -M otherwise
+CUSTLIBS =
+MPIINC =
+MPILIB =
+BLOCKINC = 
+BLOCKLIB = 
+CUSTLIBS = -ldl -lm
+
+ifeq (@MPI_MODE@,MPI_PARALLEL)
+  CC = mpicc 
+  LDR = mpicc 
+endif
+
+#-------------------  compiler/library definitions  ----------------------------
+# select using MACHINE=<name> in command line.  For example
+#    ophir> make all MACHINE=ophir
+# New machines can be added to ifeq blocks below.
+
+ifeq ($(MACHINE),macosx)
+  CC = mpicc
+  LDR = mpicc
+  OPT = -O3 -I/usr/include/malloc
+else
+  abort Unsupported MACHINE=$(MACHINE)
+endif
+
+ifeq (@MPI_MODE@,NO_MPI_PARALLEL)
+  MPIINC = 
+  MPILIB = 
+endif
+
+CFLAGS = -g $(OPT) $(BLOCKINC) $(MPIINC)
+LIB = $(BLOCKLIB) $(MPILIB) $(CUSTLIBS)

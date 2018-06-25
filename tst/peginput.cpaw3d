@@ -1,0 +1,78 @@
+<comment>
+
+problem = cpaw3d
+author  = Matthew Kunz
+journal =
+config  = --with-problem=cpaw3d
+
+<job>
+
+problem_id      = cpaw3d    # problem ID: basename of output filenames
+maxout          = 2         # Output blocks number from 1 -> maxout
+num_domains     = 1
+
+<output1>
+out_fmt = hst               # History data dump
+dt      = 0.1               # time increment between outputs
+
+<output2>
+out_fmt = vtk
+dt      = 0.1
+
+<output3>
+out_fmt = lis               # particle list data dump (ONLY for particles)
+dt      = 1.0              # time step between output
+id      = par
+
+<time>
+
+cour_no         = 0.4           # The Courant, Friedrichs, & Lewy (CFL) Number
+nlim            = 10000000      # cycle limit
+tlim            = 2.0943951023931948       # time limit
+timestep        = 0.01          # timestep
+
+
+<domain1>
+level           = 0
+Nx1             = 64    # Number of zones in X-direction
+x1min           = 0       # minimum value of X
+x1max           = 12.5663706143591725    # maximum value of X
+bc_ix1          = 4         # inner-I (X) boundary flag
+bc_ox1          = 4         # outer-I (X) boundary flag
+
+Nx2             = 32      # Number of zones in X2-direction
+x2min           = 0       # minimum value of X2
+x2max           = 6.2831853071795862      # maximum value of X2
+bc_ix2          = 4         # inner-J (Y) boundary flag
+bc_ox2          = 4         # outer-J (Y) boundary flag
+
+Nx3             = 32         # Number of zones in X3-direction
+x3min           = 0       # minimum value of X3
+x3max           = 6.2831853071795862   # maximum value of X3
+bc_ix3          = 4         # inner-K (Z) boundary flag
+bc_ox3          = 4         # outer-K (Z) boundary flag
+
+NGrid_x1 = 1
+NGrid_x2 = 1
+NGrid_x3 = 1
+
+<particle>
+
+partypes        = 1         # number of types of particles
+#parnumgrid      = 2         # number of particle for each type per grid
+parnumcell      = 64        # number of particles for each type per cell
+
+interp          = 2         # interpolation scheme (1: CIC; 2: TSC; 3: QP)
+nshuf           = -1        # number of time steps to shuffle the particles
+qomc            = 1.0      # charge-to-mass ratio (divided by c)
+nfpass          = 0
+
+<problem>
+ZTeTi           = 1.
+nwx             = 1
+distfunc        = 1
+amp             = 0.000001
+beta            = 2.0
+dir             = 1
+gamma           = 1.666666666666666667
+

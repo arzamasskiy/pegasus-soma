@@ -1,0 +1,307 @@
+Lam ~ t^{-(4+log10(S))}
+
+
+%L = - ( 2 + bprp - bprl) / bprl
+
+beta = 200;
+bprl = ( beta + 4/3 ) / ( 1 - 2*L/3 );
+bprp = beta - (1/3) * ( 2 + L*bprl );
+
+L    = [0.0001   0.0003   0.0010   0.0030    0.0100    0.0300    0.1000   0.3000];
+bprl = [201.347  201.374  201.468  201.737   202.685   205.442   215.714  251.667];
+bprp = [199.327  199.313  199.266  199.132   198.658   197.279   192.143  174.167];
+
+
+% -45 degrees
+L     = [ 0.0001  0.0003 0.001  0.003 0.01   0.03   0.1     0.3    ];
+gamma = [ 0.01032 0.0107 0.0126 0.016 0.0273 0.0467 0.0875  0.14603];
+k = 2*pi./[ 163.0  161.0  157.0  154.0  150.0  141.0 ];
+plot(log10(L),log10(gamma),'.b');%,log10(L),log10(L)*0.5-0.57,'b');
+hold on;
+% - 30 degrees
+gamma = [ 0       0      0.010282 0.012887 0.021542 0.03783 0.07027 0.12578];
+plot(log10(L),log10(gamma),'.r');%,log10(L),log10(L)*0.52-0.66,'r');
+% - 0 degress
+gamma = [ 0.0001   0.0003   0.0010   0.0030    0.0100 0.03 0 0];
+plot(log10(L),log10(gamma),'.k');
+hold off;
+
+
+
+    dir ='/Users/kunz/';        % directory
+    fname = 'firehose';
+
+    filename = [dir,fname,'.hst'];
+    fid = fopen(filename);
+    C = textscan(fid,'%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f','CommentStyle','#');
+    fclose(fid);
+    time = C{1};
+    MEx  = C{22};
+    MEy  = C{23};
+    MEz  = C{13};
+    Inst = C{20};
+    plot(time,log(MEz)*0.5)
+
+    f = 10;
+    if (f<10)
+        numlab = ['000',num2str(f)];   
+    elseif (f<100)
+       numlab = ['00',num2str(f)];
+    elseif (f<1000)
+       numlab = ['0',num2str(f)];
+    else
+       numlab = num2str(f);
+    end
+
+    filename = [dir,fname,'.',numlab,'.vtk'];
+    ary = [3 1 3 9];
+    [Grid,status] = init_grid(filename,ary);
+
+    [time,var,name,status] = readvtk(Grid,filename,1);
+    U.bx  = squeeze(var(1,:,:,:));
+    U.by  = squeeze(var(2,:,:,:));
+    U.bz  = squeeze(var(3,:,:,:));
+    plot(Grid.x1,U.bz)
+
+
+
+
+
+
+
+
+    
+beta = 210.944
+bprp = 205.529
+bprl = 221.774
+
+Lmax = .06423 = 1 - bprp/bprl - 2/bprl
+bprp = ( 3.0 * 0.93577 * beta - 2.0 ) / ( 1.0 + 2.0 * 0.93577 )
+bprl = 3 * beta - 2 * bprp
+
+bx = 2/sqrt(13)
+by = 3/sqrt(13)
+St = 0.0573
+bsq = 1 - 2*bx*by*(St) +bx^2*(St)^2
+
+
+
+
+
+
+
+
+
+
+    figure(4);clf;
+    set(gcf,'Color',[1 1 1]);
+    set(gcf,'Units','centimeters');
+    set(gcf,'Position',[1,1,11.5,5.5]);
+    set(gcf,'PaperPositionMode','auto');
+    
+    shear = 0.003;
+    dir ='/Users/kunz/Documents/codes/pegasus/bin/mrs-fast/';        % directory
+    fname = 'mrshear';
+    filename = [dir,fname,'.hst'];
+
+    fid = fopen(filename);
+    C = textscan(fid,'%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f','CommentStyle','#');
+    fclose(fid);
+
+    time = C{1};
+    MEx  = C{11};
+    MEy  = C{12};
+    MEz  = C{13};
+    Bxa  = C{17};
+    Bya  = C{18};
+    Maxw = C{20};
+    Lam1 = C{21};
+    Delt = C{22};
+    
+    time1 = time*shear;
+
+    ME = MEx+MEy+MEz;
+    Bsq = Bxa.^2+Bya.^2;
+    
+    pitch = Bya(1)/Bxa(1);
+    bx = 1.0./sqrt(1.0+(pitch-time1).^2);
+    by = (pitch-time1)./sqrt(1.0+(pitch-time1).^2);
+    dBprlsq1 = bx.^2.*(2*MEx-Bxa.^2)+by.^2.*(2*MEy-Bya.^2)-2*bx.*by.*(Maxw+Bxa.*Bya);
+    
+    dBprpsq1 = 2*ME-Bsq-dBprlsq1;
+    
+    h(1) = loglog(time1,dBprlsq1,'Color',[232/255 0 0]);
+    hold on;
+    %loglog(time1,dBprpsq1,'LineWidth',0.4,'Color',[232/255 0 0]);
+        
+    shear = 1e-3;
+    dir ='/Users/kunz/Documents/codes/pegasus/bin/mrs-medium/';        % directory
+    fname = 'mrshear';
+    filename = [dir,fname,'.hst'];
+
+    fid = fopen(filename);
+    C = textscan(fid,'%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f','CommentStyle','#');
+    fclose(fid);
+
+    time = C{1};
+    MEx  = C{11};
+    MEy  = C{12};
+    MEz  = C{13};
+    Bxa  = C{17};
+    Bya  = C{18};
+    Maxw = C{20};
+    Lam2 = C{21};
+    Delt = C{22};
+    
+    time2 = time*shear;
+
+    ME = MEx+MEy+MEz;
+    Bsq = Bxa.^2+Bya.^2;
+    
+    pitch = Bya(1)/Bxa(1);
+    bx = 1.0./sqrt(1.0+(pitch-time2).^2);
+    by = (pitch-time2)./sqrt(1.0+(pitch-time2).^2);
+    dBprlsq2 = bx.^2.*(2*MEx-Bxa.^2)+by.^2.*(2*MEy-Bya.^2)-2*bx.*by.*(Maxw+Bxa.*Bya);
+    
+    dBprpsq2 = 2*ME-Bsq-dBprlsq2;
+    
+    h(2) = loglog(time2,dBprlsq2,'Color',[34/255 139/255 34/255]);
+    %loglog(time2,dBprpsq2,'LineWidth',0.4,'Color',[34/255 139/255 34/255]);
+
+   
+    shear = 3e-4;
+    dir ='/Users/kunz/Documents/codes/pegasus/bin/mrs-slow/';        % directory
+    fname = 'mrshear';
+    filename = [dir,fname,'.hst'];
+
+    fid = fopen(filename);
+    C = textscan(fid,'%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f','CommentStyle','#');
+    fclose(fid);
+
+    time = C{1};
+    MEx  = C{11};
+    MEy  = C{12};
+    MEz  = C{13};
+    Bxa  = C{17};
+    Bya  = C{18};
+    Maxw = C{20};
+    Lam3 = C{21};
+    Delt = C{22};
+    
+    time3 = time*shear;
+
+    ME = MEx+MEy+MEz;
+    Bsq = Bxa.^2+Bya.^2;
+    
+    pitch = Bya(1)/Bxa(1);
+    bx = 1.0./sqrt(1.0+(pitch-time3).^2);
+    by = (pitch-time3)./sqrt(1.0+(pitch-time3).^2);
+    dBprlsq3 = bx.^2.*(2*MEx-Bxa.^2)+by.^2.*(2*MEy-Bya.^2)-2*bx.*by.*(Maxw+Bxa.*Bya);
+    
+    dBprpsq3 = 2*ME-Bsq-dBprlsq3;
+    
+    h(3) = loglog(time3,dBprlsq3,'b');
+    %loglog(time3,dBprpsq3,'b','LineWidth',0.4);
+
+    shear = 1e-4;
+    dir ='/Users/kunz/Documents/codes/pegasus/bin/mrs-super-slow/';        % directory
+    fname = 'mrshear';
+    filename = [dir,fname,'.hst'];
+
+    fid = fopen(filename);
+    C = textscan(fid,'%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f','CommentStyle','#');
+    fclose(fid);
+
+    time = C{1};
+    MEx  = C{11};
+    MEy  = C{12};
+    MEz  = C{13};
+    Bxa  = C{17};
+    Bya  = C{18};
+    Maxw = C{20};
+    Lam4 = C{21};
+    Delt = C{22};
+    
+    time4 = time*shear;
+
+    ME = MEx+MEy+MEz;
+    Bsq = Bxa.^2+Bya.^2;
+    
+    pitch = Bya(1)/Bxa(1);
+    bx = 1.0./sqrt(1.0+(pitch-time4).^2);
+    by = (pitch-time4)./sqrt(1.0+(pitch-time4).^2);
+    dBprlsq4 = bx.^2.*(2*MEx-Bxa.^2)+by.^2.*(2*MEy-Bya.^2)-2*bx.*by.*(Maxw+Bxa.*Bya);
+    
+    dBprpsq4 = 2*ME-Bsq-dBprlsq4;
+    
+    h(4) = loglog(time4,dBprlsq4,'k');
+    %loglog(time4,dBprpsq4,'k','LineWidth',.4);
+
+    
+    t = linspace(1e-1,1.05,2);
+    loglog(t,t.^(4/3)*1.2,'--k','LineWidth',.5);
+    hold off;
+
+    axis([5e-2 3 1e-5 4]);
+    xlabel('$S t$'); ylabel('$\langle \delta\!B^2_{||}\, \rangle$');
+    set(gca,'XTick',[1e-1 1e0]);
+    set(gca,'YTick',[1e-6 1e-5 1e-4 1e-3 1e-2 1e-1 1e0],'YMinorTick','on');
+    set(gca,'TickLength',[0.025 0.025],'FontSize',10);
+    set(gca,'Units','normalized','Position',[0.14,0.14,0.84,0.82]);
+    plotTickLatex2D('xtickdy',-0.01,'xlabeldy',-0.02,'ytickdx',-0.007,'ylabeldx',-0.01,'ytickdy',0.01);
+
+    ah1 = gca;
+    leg1 = legend(ah1,h(1:4),'$~S = 0.003$','$~S = 0.001$', ...
+        '$~S = 0.0003$','$~S = 0.0001$','Location',[0.63 0.26 0.32 0.1783]);
+    legend(ah1,'boxoff');
+    set(leg1,'interpreter','latex');
+    
+    text(3e-1,1.1,'$\propto\! t^{4/3}$','FontSize',10,'Interpreter','latex');
+    
+    
+    fig(13); clf;
+    set(gcf,'Color',[1 1 1]);
+    set(gcf,'Units','centimeters');
+    set(gcf,'Position',[1,1,11.5,5.5]);
+    set(gcf,'PaperPositionMode','auto');
+    
+    S = [1,3,10,30]*1e-4; SD = [0.1041,0.1791,0.3254,0.5677];
+    
+    plot(time1,Lam1,'Color',[232/255 0 0]);
+    hold on;
+    plot(0.352,SD(4),'+','Color',[232/255 0 0]);
+    plot(time2,Lam2,'Color',[34/255 139/255 34/255]);
+    plot(0.233,SD(3),'+','Color',[34/255 139/255 34/255]);
+    plot(time3,Lam3,'b');
+    plot(0.144,SD(2),'+b');
+    plot(time4,Lam4,'k');
+    plot(0.0933,SD(1),'+k');
+    hold off;
+    axis([0 3 -0.05 0.6]);
+    set(gca,'TickLength',[0.025 0.025],'Fontsize',10);
+    set(gca,'YTick',[ 0 0.1 0.2 0.3 0.4 0.5 0.6]); set(gca,'XTick',[0 0.5 1 1.5 2 2.5 3]);
+    set(gca,'Units','normalized','Position',[0.14,0.14,0.84,0.82]);
+    xlabel('$S t$'); ylabel('$\langle\, \Lambda_{\rm m} \, \rangle$');
+    plotTickLatex2D('xtickdy',-0.01,'xlabeldy',-0.02,'ytickdx',-0.004,'ylabeldx',-0.04,'ytickdy',0.01);
+    set(gca,'XMinorTick','on','YMinorTick','on');
+    
+
+    hax = axes('Position',[0.57 0.47 0.35 0.4]);
+    SL = linspace(-4.2,-2.3,2);
+    plot(SL,0.5*SL+1.015,'--k','LineWidth',0.5);
+    hold on;
+    plot(log10(S(1)),log10(SD(1)),'+k');
+    plot(log10(S(2)),log10(SD(2)),'+b');
+    plot(log10(S(3)),log10(SD(3)),'+','Color',[34/255 139/255 34/255]);
+    plot(log10(S(4)),log10(SD(4)),'+','Color',[232/255 0 0]);
+    
+    axis([-4.5 -2 -1.2 0]);
+    set(gca,'TickLength',[0.04 0.04],'FontSize',10);
+    set(gca,'XMinorTick','on','YMinorTick','on');
+    xlabel('${\rm log}~~S$'); ylabel('${\rm log}~~\langle\,\Lambda_{\rm m}\,\rangle_{\rm max}$');
+    plotTickLatex2D('xlabeldy',-0.015,'xtickdy',-0.01,'ytickdx',-0.005,'ylabeldx',-0.004,'xtickdx',-0.005,'ytickdy',0.005);
+    text(-3.85,-0.4,'$\propto\!S^{1/2}$','FontSize',10,'Interpreter','latex');    
+    hold off;
+
+
+
