@@ -115,7 +115,7 @@ void Integrate_Particles_1(DomainS *pD)
     drho = grproperty[curG->property].m;
 #ifdef DELTA_F
   getdf(curP, &f0_t);
-  drho *= (1.0 = (f0_t/curG->f_0))
+  drho *= (1.0 - (f0_t/curG->f_0));
 #endif
     getweight(pG, curP->x1, curP->x2, curP->x3, cell1, weight, &is, &js, &ks);
       

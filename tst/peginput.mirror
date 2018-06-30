@@ -1,0 +1,82 @@
+<comment>
+
+problem = mirror2d
+author  = Matthew Kunz
+journal =
+config  = --with-problem=mirror2d --enable-mpi --enable-deltaf
+
+<job>
+
+problem_id      = mirror   # problem ID: basename of output filenames
+maxout          = 4         # Output blocks number from 1 -> maxout
+num_domains     = 1
+
+<output1>
+out_fmt = hst
+dt      = 1.0
+
+<output2>
+out_fmt = vtk
+dt      = 10.0
+
+<output3>
+out_fmt = rst
+dt      = 250.0
+time    = 250.0
+
+<output4>
+out_fmt = track
+dt      = 0.6
+par_prop= limit
+
+<time>
+
+cour_no         = 0.5       # The Courant, Friedrichs, & Lewy (CFL) Number
+nlim            = 10000000     # cycle limit
+tlim            = 1000.0
+timestep        = 0.05     # timestep for hybrid-PIC simulations
+dtncheck        = 100
+
+<domain1>
+level           = 0
+Nx1             = 812    # Number of zones in X-direction
+x1min           = 0.0       # minimum value of X
+x1max           = 2513.274    # maximum value of X
+bc_ix1          = 4        # inner-I (X) boundary flag
+bc_ox1          = 4        # outer-I (X) boundary flag
+
+Nx2             = 256      # Number of zones in X2-direction
+x2min           = 0.0       # minimum value of X2
+x2max           = 794.767      # maximum value of X2
+bc_ix2          = 4         # inner-J (Y) boundary flag
+bc_ox2          = 4         # outer-J (Y) boundary flag
+
+Nx3             = 1         # Number of zones in X3-direction
+x3min           = 0.0       # minimum value of X3
+x3max           = 1.0    # maximum value of X3
+bc_ix3          = 4         # inner-K (Z) boundary flag
+bc_ox3          = 4         # outer-K (Z) boundary flag
+
+NGrid_x1 = 4
+NGrid_x2 = 1
+NGrid_x3 = 1
+
+<particle>
+
+partypes        = 1         # number of types of particles
+parnumcell      = 256     # number of particles for each type per cell
+
+interp          = 2         # interpolation scheme (1: CIC; 2: TSC; 3: QP)
+nshuf           = 1000        # number of time steps to shuffle the particles
+qomc            = 1.0      # charge-to-mass ratio (divided by c)
+nfpass          = 1        # number of filter passes (must be <= nghost)
+
+<problem>
+distfunc        = 3
+amp             = 0.0001
+beta_prp        = 103.4066151125627
+beta_prl        = 93.186769774874662
+beta            = 100.0
+ZTeTi           = 1.0
+gamma           = 1.666666666666666667
+nlis            = 10
